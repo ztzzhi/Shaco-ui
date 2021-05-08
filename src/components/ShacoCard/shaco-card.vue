@@ -13,29 +13,32 @@
         :class="{ active: active === index }"
       >
         <slot name="header">
-          <span>{{ item.title }}</span>
-          <el-tooltip
-            effect="light"
-            :content="item.tipText"
-            placement="right"
-            class="tooltip"
-            v-if="item.tipText"
-          >
-            <i class="el-icon-warning-outline"></i>
-          </el-tooltip>
+          <div :style="layoutHeaderCss">
+            <span>{{ item.title }}</span>
+            <el-tooltip
+              effect="light"
+              :content="item.tipText"
+              placement="right"
+              class="tooltip"
+              v-if="item.tipText"
+            >
+              <i class="el-icon-warning-outline"></i>
+            </el-tooltip>
+          </div>
         </slot>
         <slot name="data">
-          <div class="coredata">{{ item.coreData }}</div>
+          <div class="coredata" :style="dataCss">{{ item.coreData }}</div>
         </slot>
         <slot name="footer">
-          <div class="footer">
+          <div class="footer" :style="footerCss">
             <span>{{ item.compareText }}</span>
             <i
               :class="{
-                'green': item.compareData.replace('%','') * 1 >= 0,
-                'red': item.compareData.replace('%','') * 1 < 0,
-                'el-icon-caret-top': item.compareData.replace('%','') * 1 >= 0,
-                'el-icon-caret-bottom': item.compareData.replace('%','') * 1 < 0,
+                green: item.compareData.replace('%', '') * 1 >= 0,
+                red: item.compareData.replace('%', '') * 1 < 0,
+                'el-icon-caret-top': item.compareData.replace('%', '') * 1 >= 0,
+                'el-icon-caret-bottom':
+                  item.compareData.replace('%', '') * 1 < 0,
               }"
               >{{ item.showCompareData }}</i
             >
@@ -50,14 +53,24 @@
 import { defineComponent, ref, toRefs } from "vue";
 import ShacoCard from "./shacocard";
 import { BASE_PARTCSS, BASE_CONTENTCSS } from "./config";
-import { ElMessage } from 'element-plus';
+import { ElMessage } from "element-plus";
 export default defineComponent({
   props: ShacoCard,
   setup(props, ctx) {
-    //11111111样式覆盖还没有做！！！！！！！！！！！！！！！！！！！！
-    const { layout = ref({}), list = ref([]) } = toRefs(props.schema as any);
-    const layoutPartCss = { ...BASE_PARTCSS };
+    const { layout = ref({}), list = ref([]), genStyle = ref({}) } = toRefs(
+      props.schema as any
+    );
+    layout.value.column = layout.value.column>=7? 7 :layout.value.column
+    const gapNumber = layout.value.gap/2 +'px'
+    const colomnNumber = (100/layout.value.column-1.5) + '%'
+    console.log(colomnNumber);
+    console.log(gapNumber);
+    
+    const layoutPartCss = { ...BASE_PARTCSS ,width:colomnNumber,marginRight:gapNumber};
+    const layoutHeaderCss = { ...genStyle.value.header };
     const layoutContentCss = { ...BASE_CONTENTCSS };
+    const dataCss = { ...genStyle.value.data };
+    const footerCss ={ ...genStyle.value.footer }
     //点击卡片背景颜色以及border发生变化
     const active = ref();
     const clickhandler = (index: any) => {
@@ -70,9 +83,10 @@ export default defineComponent({
           ? item.coreData
           : item.coreData * 100 + "%";
       } else if (item.dataType === "custom") {
-        if(typeof item.formatData !=='function') ElMessage.warning('your formatData type is not a Function')
+        if (typeof item.formatData !== "function")
+          ElMessage.warning("your formatData type is not a Function");
         item.formatData(item.coreData);
-        item.coreData=item.formatData(item.coreData)
+        item.coreData = item.formatData(item.coreData);
       } else {
         item.coreData =
           typeof item.coreData == "number"
@@ -84,19 +98,25 @@ export default defineComponent({
     });
     //compareData数据处理
     list.value = list.value.map((item: any) => {
-      item.showCompareData = item.compareData
-      if(typeof item.showCompareData=="number"){
-        item.showCompareData = item.showCompareData+''
+      item.showCompareData = item.compareData;
+      if (typeof item.showCompareData == "number") {
+        item.showCompareData = item.showCompareData + "";
       }
-      return item
+      return item;
     });
     return {
       layout,
       list,
+      colomnNumber,
+      gapNumber,
+      genStyle,
       layoutPartCss,
+      layoutHeaderCss,
+      dataCss,
       layoutContentCss,
+      footerCss,
       clickhandler,
-      active
+      active,
     };
   },
 });
@@ -119,7 +139,7 @@ export default defineComponent({
 }
 .active {
   background-color: #fff;
-  border: 1px solid#1E90FF;
+  border: 1px solid#0f7debd0;
   border-radius: 10px;
 }
 .coredata {

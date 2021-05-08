@@ -15,6 +15,7 @@ export type ShacoList = {
   compareText?: string,
   compareData?: string,
   linkTo?: Function,
+  genStyle?: Object,
 }
 
 export type IShacoCard = {
