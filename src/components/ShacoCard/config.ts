@@ -10,7 +10,8 @@ export const DATA_TYPE_ALL = {
 }
 
 export const BASE_HEADER = {
-  title: '商品访客记录',
+  title: '默认文本',
+  icon:'el-icon-warning-outline',
   coreData: '666666',//核心数据
   dataType: DATA_TYPE_ALL.thousandth,//数据类型 可选 percent（百分比）， thousandth（千分位分割加逗号），custom（用户自定义） 
   compareText: '较前1日',

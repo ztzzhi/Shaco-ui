@@ -22,7 +22,7 @@
               class="tooltip"
               v-if="item.tipText"
             >
-              <i class="el-icon-warning-outline"></i>
+              <i class='el-icon-warning-outline'></i>
             </el-tooltip>
           </div>
         </slot>

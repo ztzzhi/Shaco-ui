@@ -15,7 +15,7 @@ export default defineComponent({
   setup() {
     const schema = {
       layout: {
-        column:5,//最大一排7个
+        column:3,//最大一排7个
         gap: 40,
       },
       list: [
@@ -32,7 +32,7 @@ export default defineComponent({
         },
         {
           title: "商品访客记录",
-          coreData: "22.1", //核心数据
+          coreData: "1", //核心数据
           dataType: "custom", //数据类型 可选 percent（百分比）， thousandth（千分位分割加逗号），custom（用户自定义）
           formatData: (val: any) => {
             return val * 100;
